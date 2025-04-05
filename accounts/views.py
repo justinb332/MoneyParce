@@ -28,7 +28,8 @@ def reset_password_view(request):
         form = CustomPasswordResetForm(request.POST)
         if form.is_valid():
             user = CustomUser.objects.get(username=form.cleaned_data['username'])
-            user.password = form.cleaned_data.get('password')
+            user.set_password(form.cleaned_data['new_password1'])
+            user.save()
             return redirect('login')
     else:
         form = CustomPasswordResetForm()

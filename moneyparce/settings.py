@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'accounts',
     'home',
     'visuals',
+    'transactions',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,5 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
