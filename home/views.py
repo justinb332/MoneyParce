@@ -14,6 +14,9 @@ def home(request):
 def add_transaction(request):
     return render(request, 'transactions/add_transaction.html')
 
+def add_income(request):
+    return render(request, 'income/add_income.html')
+
 @login_required
 def settings(request):
     return render(request, 'home/settings.html')
