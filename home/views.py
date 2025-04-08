@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from accounts.models import CustomUser
@@ -31,3 +31,11 @@ def delete_account(request):
         logout(request)
         return HttpResponseRedirect(reverse_lazy('home'))
     return render(request, 'home/settings.html')
+
+@login_required
+def reset_data(request):
+    if request.method == 'POST':
+        Income.objects.all().delete()
+        Transaction.objects.all().delete()
+        return redirect('settings')
+    return redirect('settings')
