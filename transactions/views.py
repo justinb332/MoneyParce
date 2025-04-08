@@ -26,7 +26,6 @@ def edit_transaction(request, name):
         form = TransactionForm(instance=transaction)
     return render(request, 'transactions/edit_transaction.html', {'form': form})
 
-
 def home(request):
     transactions = Transaction.objects.all().order_by('-date')
     return render(request, 'home/home.html', {'transactions': transactions})
