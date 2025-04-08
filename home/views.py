@@ -5,11 +5,13 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from accounts.models import CustomUser
+from income.models import Income
 from transactions.models import Transaction
 
 def home(request):
     transactions = Transaction.objects.all().order_by('-date')
-    return render(request, 'home/home.html', {'transactions': transactions})
+    incomes = Income.objects.all().order_by('-date')
+    return render(request, 'home/home.html', {'transactions': transactions, 'incomes': incomes})
 
 def add_transaction(request):
     return render(request, 'transactions/add_transaction.html')

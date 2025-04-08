@@ -6,21 +6,45 @@
 <h1>Welcome to MoneyParce</h1>
 <p>This is the homepage! </p>
 
-     <h2>All Transactions</h2>
+<div style="display: flex; justify-content: space-between;"> <!-- Flexbox for horizontal alignment -->
 
-  {% if transactions %}
-    <ul>
-      {% for transaction in transactions %}
-        <li>
-          <strong>{{ transaction.name }}</strong> —
-          ${{ transaction.amount }} —
-          {{ transaction.category.name }} —
-          {{ transaction.date|date:"M d, Y H:i" }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No transactions yet.</p>
-  {% endif %}
+  <!-- Transactions List -->
+  <div style="width: 48%;"> <!-- Set width to control size -->
+    <h2>All Transactions</h2>
+    {% if transactions %}
+      <ul>
+        {% for transaction in transactions %}
+          <li>
+            <strong>{{ transaction.name }}</strong> —
+            ${{ transaction.amount }} —
+            {{ transaction.category.name }} —
+            {{ transaction.date|date:"M d, Y H:i" }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No transactions yet.</p>
+    {% endif %}
+  </div>
 
+  <!-- Income List -->
+  <div style="width: 48%;"> <!-- Set width to control size -->
+    <h2>All Income</h2>
+    {% if incomes %}
+      <ul>
+        {% for income in incomes %}
+          <li>
+            <strong>{{ income.name }}</strong> —
+            ${{ income.amount }} —
+            {{ income.category.name }} —
+            {{ income.date|date:"M d, Y H:i" }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No income records yet.</p>
+    {% endif %}
+  </div>
+
+</div>
 {% endblock %}
