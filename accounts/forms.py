@@ -117,3 +117,10 @@ class CustomPasswordResetForm(forms.Form):
             self._errors['new_password1'] = ["Passwords don't match"]
             del form_data['new_password1']
             del form_data['new_password2']
+
+class EnableTwoFactorAuthForm(forms.Form):
+    enable_2fa = forms.BooleanField(
+        label="Enable Two-Factor Authentication",
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
