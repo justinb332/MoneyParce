@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
-
+from django.contrib import messages
 from .forms import TransactionForm
 from .models import Transaction
 
@@ -25,6 +25,12 @@ def edit_transaction(request, name):
     else:
         form = TransactionForm(instance=transaction)
     return render(request, 'transactions/edit_transaction.html', {'form': form})
+
+def delete_transaction(request, name):
+    transaction = get_object_or_404(Transaction, name=name)
+    transaction.delete()
+    return redirect('home')
+
 
 def home(request):
     transactions = Transaction.objects.all().order_by('-date')

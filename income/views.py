@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import Income
 from .forms import IncomeForm
 
@@ -23,6 +24,12 @@ def edit_income(request, name):
     else:
         form = IncomeForm(instance=income)
     return render(request, 'income/edit_income.html', {'form': form})
+
+def delete_income(request, name):
+    income = get_object_or_404(Income, name=name)
+    income.delete()
+    return redirect('home')
+
 
 def home(request):
     incomes = Income.objects.all().order_by('-date')
