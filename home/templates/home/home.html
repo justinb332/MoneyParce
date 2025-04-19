@@ -15,7 +15,7 @@
       <ul>
         {% for transaction in transactions %}
           <li>
-            <strong>{{ transaction.name }}</strong> —
+            <strong>{{ transaction.slug }}</strong> —
             ${{ transaction.amount }} —
             {{ transaction.category.name }} —
             {{ transaction.date|date:"M d, Y H:i" }}
@@ -34,7 +34,7 @@
       <ul>
         {% for income in incomes %}
           <li>
-            <strong>{{ income.name }}</strong> —
+            <strong>{{ income.slug }}</strong> —
             ${{ income.amount }} —
             {{ income.category.name }} —
             {{ income.date|date:"M d, Y H:i" }}

@@ -15,8 +15,8 @@ def add_transaction(request):
 
     return render(request, 'transactions/add_transaction.html', {'form': form})
 
-def edit_transaction(request, name):
-    transaction = get_object_or_404(Transaction, name=name)
+def edit_transaction(request, slug):
+    transaction = get_object_or_404(Transaction, slug=slug)
     if request.method == 'POST':
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
@@ -26,8 +26,8 @@ def edit_transaction(request, name):
         form = TransactionForm(instance=transaction)
     return render(request, 'transactions/edit_transaction.html', {'form': form})
 
-def delete_transaction(request, name):
-    transaction = get_object_or_404(Transaction, name=name)
+def delete_transaction(request, slug):
+    transaction = get_object_or_404(Transaction, slug=slug)
     transaction.delete()
     return redirect('home')
 
