@@ -54,6 +54,23 @@ footer {
     font-size: 0.9rem;
 }
 
+.blue-btn {
+    background-color: #007bff; /* Bootstrap's primary blue color */
+    color: white;
+    text-decoration: none; /* Removes underline from link */
+    padding: 10px 20px; /* Adds padding to make it look like a button */
+    border-radius: 5px; /* Optional: Rounds the button edges */
+    border: none; /* Removes border */
+    display: inline-block; /* Ensures it behaves like a button */
+    font-weight: bold; /* Makes text bold */
+    transition: 0.3s ease-in-out; /* Adds smooth hover effect */
+}
+
+.blue-btn:hover {
+    background-color: #0056b3; /* Darker blue for hover effect */
+}
+
+
 @media (max-width: 768px) {
     header nav ul {
         flex-direction: column;

@@ -13,6 +13,12 @@ def home(request):
     incomes = Income.objects.all().order_by('-date')
     return render(request, 'home/home.html', {'expenses': expenses, 'incomes': incomes})
 
+def transactions_view(request):
+    expenses = Expense.objects.all()
+    incomes = Income.objects.all()
+    context = {'expenses': expenses, 'incomes': incomes}
+    return render(request, 'home/transactions.html', context)
+
 def add_expense(request):
     return render(request, 'expense/add_expense.html')
 

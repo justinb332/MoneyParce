@@ -9,7 +9,7 @@ def add_income(request):
         form = IncomeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('transactions')
     else:
         form = IncomeForm()
     return render(request, 'income/add_income.html', {'form': form})
