@@ -6,15 +6,15 @@ from django.urls import reverse_lazy
 
 from accounts.models import CustomUser
 from income.models import Income
-from transactions.models import Transaction
+from expense.models import Expense
 
 def home(request):
-    transactions = Transaction.objects.all().order_by('-date')
+    expenses = (Expense.objects.all().order_by('-date'))
     incomes = Income.objects.all().order_by('-date')
-    return render(request, 'home/home.html', {'transactions': transactions, 'incomes': incomes})
+    return render(request, 'home/home.html', {'expenses': expenses, 'incomes': incomes})
 
-def add_transaction(request):
-    return render(request, 'transactions/add_transaction.html')
+def add_expense(request):
+    return render(request, 'expense/add_expense.html')
 
 def add_income(request):
     return render(request, 'income/add_income.html')
@@ -36,6 +36,6 @@ def delete_account(request):
 def reset_data(request):
     if request.method == 'POST':
         Income.objects.all().delete()
-        Transaction.objects.all().delete()
+        Expense.objects.all().delete()
         return redirect('settings')
     return redirect('settings')

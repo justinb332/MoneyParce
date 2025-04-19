@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('transactions', '0002_category_alter_transaction_date_transaction_category'),
+        ('expense', '0002_category_alter_transaction_date_transaction_category'),
     ]
 
     operations = [

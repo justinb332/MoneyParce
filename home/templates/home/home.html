@@ -8,28 +8,28 @@
 
 <div style="display: flex; justify-content: space-between;"> <!-- Flexbox for horizontal alignment -->
 
-  <!-- Transactions List -->
+  <!-- Expenses List -->
   <div style="width: 48%;"> <!-- Set width to control size -->
-    <h2>All Transactions</h2>
-    {% if transactions %}
+    <h2>All Expenses</h2>
+    {% if expenses %}
       <ul>
-        {% for transaction in transactions %}
+        {% for expense in expenses %}
           <li>
-            <strong>{{ transaction.slug }}</strong> —
-            ${{ transaction.amount }} —
-            {{ transaction.category.name }} —
-            {{ transaction.date|date:"M d, Y H:i" }}
+            <strong>{{ expense.slug }}</strong> —
+            ${{ expense.amount }} —
+            {{ expense.category.name }} —
+            {{ expense.date|date:"M d, Y H:i" }}
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p>No transactions yet.</p>
+      <p>No expenses yet.</p>
     {% endif %}
   </div>
 
   <!-- Income List -->
   <div style="width: 48%;"> <!-- Set width to control size -->
-    <h2>All Income</h2>
+    <h2>All Incomes</h2>
     {% if incomes %}
       <ul>
         {% for income in incomes %}
@@ -42,7 +42,7 @@
         {% endfor %}
       </ul>
     {% else %}
-      <p>No income records yet.</p>
+      <p>No incomes yet.</p>
     {% endif %}
   </div>
 

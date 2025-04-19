@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Add Transaction{% endblock %}
+{% block title %}Add Expense{% endblock %}
 
 {% block content %}
-  <h2>Add Transaction</h2>
+  <h2>Add Expense</h2>
 
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Add Transaction</button>
+    <button type="submit">Add Expense</button>
   </form>
 {% endblock %}

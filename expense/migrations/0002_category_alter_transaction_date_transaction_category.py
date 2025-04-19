@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('transactions', '0001_initial'),
+        ('expense', '0001_initial'),
     ]
 
     operations = [
@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='category',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='transactions.category'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='expense.category'),
         ),
     ]

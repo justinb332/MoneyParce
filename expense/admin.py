@@ -2,11 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Transaction, Category
+from .models import Expense, Category
 
 
-@admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
+@admin.register(Expense)
+class ExpenseAdmin(admin.ModelAdmin):
     # Customize the fields displayed in the list view of the admin panel
     list_display = ('name', 'amount', 'category', 'date', 'notes')
     search_fields = ('name', 'category__name')  # Allow searching by name and category
