@@ -14,8 +14,8 @@ def add_income(request):
         form = IncomeForm()
     return render(request, 'income/add_income.html', {'form': form})
 
-def edit_income(request, name):
-    income = get_object_or_404(Income, name=name)
+def edit_income(request, slug):
+    income = get_object_or_404(Income, slug=slug)
     if request.method == 'POST':
         form = IncomeForm(request.POST, instance=income)
         if form.is_valid():
@@ -25,8 +25,8 @@ def edit_income(request, name):
         form = IncomeForm(instance=income)
     return render(request, 'income/edit_income.html', {'form': form})
 
-def delete_income(request, name):
-    income = get_object_or_404(Income, name=name)
+def delete_income(request, slug):
+    income = get_object_or_404(Income, slug=slug)
     income.delete()
     return redirect('home')
 
