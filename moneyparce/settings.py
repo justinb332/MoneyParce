@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'expense',
     'income',
     'django_cron',
+    'reports',
 ]
 
 MIDDLEWARE = [

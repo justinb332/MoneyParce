@@ -28,4 +28,4 @@ def create_report():
 @login_required
 def display_report(request):
    report = create_report()
-   return render(request, 'report.html', {'report': report})
+   return render(request, 'reports/report.html')
