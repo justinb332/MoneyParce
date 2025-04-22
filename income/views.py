@@ -20,7 +20,7 @@ def edit_income(request, slug):
         form = IncomeForm(request.POST, instance=income)
         if form.is_valid():
             form.save()
-            return redirect('home')  # Adjust the redirect as necessary
+            return redirect('transactions')  # Adjust the redirect as necessary
     else:
         form = IncomeForm(instance=income)
     return render(request, 'income/edit_income.html', {'form': form})
@@ -28,7 +28,7 @@ def edit_income(request, slug):
 def delete_income(request, slug):
     income = get_object_or_404(Income, slug=slug)
     income.delete()
-    return redirect('home')
+    return redirect('transactions')
 
 
 def home(request):

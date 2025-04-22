@@ -1,62 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions</title>
-</head>
-<body>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1>Transactions</h1>
-        <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
-    </div>
-    <div style="text-align: right; margin-bottom: 10px;">
-       <a href="{% url 'add_expense' %}" class="btn btn-primary">Add Expense</a>
-    </div>
-    <div style="text-align: right; margin-bottom: 10px;">
-        <a href="{% url 'add_income' %}" class="btn btn-primary">Add Income</a>
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Transactions</h1>
+</div>
+
+    <style>
+        .add-button {
+            display: inline-block;
+            width: 30px; /* Reduced size */
+            height: 30px; /* Reduced size */
+            border: none;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            font-size: 18px; /* Smaller font */
+            text-align: center;
+            line-height: 28px; /* Adjusted for smaller height */
+            cursor: pointer;
+            margin-left: 5px; /* Small margin for spacing */
+        }
+        .add-button:hover {
+            background-color: #0056b3;
+        }
+        .header-container {
+            display: flex;
+            justify-content: flex-start; /* Align content to the left */
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .header-container h2 {
+            margin: 0; /* Remove default top/bottom margin for better spacing */
+        }
+    </style>
+
+
+<div style="display: flex; justify-content: space-between;"> <!-- Flexbox for horizontal alignment -->
+
+    <!-- Expenses List -->
+    <div style="width: 100%; margin-left: 20px;"> <!-- Set width to control size -->
+        <div class="header-container" style="display: flex; align-items: center; gap: 10px;">
+            <h2 style="margin: 0;">All Expenses</h2>
+            <a href="{% url 'add_expense' %}" class="add-button">+</a>
+        </div>
+        {% if expenses %}
+            <ul>
+                {% for expense in expenses %}
+                    <li>
+                        <a href="{% url 'edit_expense' expense.slug %}" style="font-weight: bold; text-decoration: none; color: #007bff;"
+                           onmouseover="this.style.textDecoration='underline';"
+                           onmouseout="this.style.textDecoration='none';">
+                            {{ expense.name }}
+                        </a> —
+                        ${{ expense.amount }} —
+                        {{ expense.category.name }} —
+                        {{ expense.date|date:"M d, Y H:i" }}
+
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No expenses yet.</p>
+        {% endif %}
     </div>
 
-    <div style="display: flex; justify-content: space-between;"> <!-- Flexbox for horizontal alignment -->
-
-  <!-- Expenses List -->
-  <div style="width: 100%; margin-left: 20px;"> <!-- Set width to control size -->
-    <h2>All Expenses</h2>
-    {% if expenses %}
-      <ul>
-        {% for expense in expenses %}
-          <li>
-            <strong>{{ expense.slug }}</strong> —
-            ${{ expense.amount }} —
-            {{ expense.category.name }} —
-            {{ expense.date|date:"M d, Y H:i" }}
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No expenses yet.</p>
-    {% endif %}
-  </div>
-
-  <!-- Income List -->
-  <div style="width: 100%;"> <!-- Set width to control size -->
-    <h2>All Incomes</h2>
-    {% if incomes %}
-      <ul>
-        {% for income in incomes %}
-          <li>
-            <strong>{{ income.slug }}</strong> —
-            ${{ income.amount }} —
-            {{ income.category.name }} —
-            {{ income.date|date:"M d, Y H:i" }}
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No incomes yet.</p>
-    {% endif %}
-  </div>
+    <!-- Income List -->
+    <div style="width: 100%;"> <!-- Set width to control size -->
+        <div class="header-container" style="display: flex; align-items: center; gap: 10px;">
+            <h2 style="margin: 0;">All Incomes</h2>
+            <a href="{% url 'add_income' %}" class="add-button">+</a>
+        </div>
+        {% if incomes %}
+            <ul>
+                {% for income in incomes %}
+                    <li>
+                        <a href="{% url 'edit_income' income.slug %}" style="font-weight: bold; text-decoration: none; color: #007bff;"
+                           onmouseover="this.style.textDecoration='underline';"
+                           onmouseout="this.style.textDecoration='none';">
+                            {{ income.name }}
+                        </a> —
+                        ${{ income.amount }} —
+                        {{ income.category.name }} —
+                        {{ income.date|date:"M d, Y H:i" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No incomes yet.</p>
+        {% endif %}
+    </div>
 
 </div>
-</body>
-</html>
+{% endblock content %}

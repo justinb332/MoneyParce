@@ -23,7 +23,7 @@ def edit_expense(request, slug):
         form = ExpenseForm(request.POST, instance=expense)
         if form.is_valid():
             form.save()
-            return redirect('home')  # Adjust the redirect as necessary
+            return redirect('transactions')  # Adjust the redirect as necessary
     else:
         form = ExpenseForm(instance=expense)
     return render(request, 'expense/edit_expense.html', {'form': form})
@@ -31,7 +31,7 @@ def edit_expense(request, slug):
 def delete_expense(request, slug):
     expense = get_object_or_404(Expense, slug=slug)
     expense.delete()
-    return redirect('home')
+    return redirect('transactions')
 
 
 def home(request):
