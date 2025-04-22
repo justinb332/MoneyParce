@@ -47,6 +47,9 @@ main {
 }
 
 footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
     background-color: #333;
     color: #fff;
     text-align: center;
