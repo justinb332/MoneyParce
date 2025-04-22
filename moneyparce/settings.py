@@ -22,6 +22,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+OPENAI_API_KEY = os.getenv("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")
+
 
 # Application definition
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'visuals',
     'expense',
     'income',
+    'reports'
 ]
 
 MIDDLEWARE = [
@@ -102,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
