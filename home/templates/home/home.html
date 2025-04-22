@@ -3,7 +3,7 @@
 {% block title %}Home - MoneyParce{% endblock %}
 
 {% block content %}
-<h1>Welcome to MoneyParce</h1>
+<h1>Welcome to MoneyParce{% if user.is_authenticated %}, {{ user.username }}{% endif %}!</h1>
 <p>This is the homepage! </p>
 
 <div style="display: flex; justify-content: space-between;"> <!-- Flexbox for horizontal alignment -->
