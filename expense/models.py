@@ -31,5 +31,33 @@ class Expense(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(null=True, blank=True)
 
+    is_recurring = models.BooleanField(default=False)
+    recurrence_period = models.CharField(
+        max_length=10,
+        choices=[
+            ('daily', 'Daily'),
+            ('weekly', 'Weekly'),
+            ('monthly', 'Monthly'),
+        ],
+        null=True,
+        blank=True
+    )
+    recurrence_day_of_week = models.CharField(
+        max_length=10,
+        choices=[
+            ('monday', 'Monday'),
+            ('tuesday', 'Tuesday'),
+            ('wednesday', 'Wednesday'),
+            ('thursday', 'Thursday'),
+            ('friday', 'Friday'),
+            ('saturday', 'Saturday'),
+            ('sunday', 'Sunday'),
+        ],
+        null=True,
+        blank=True
+    )
+    recurrence_day_of_month = models.PositiveIntegerField(null=True, blank=True)
+    next_occurrence = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
         return f"{self.name} (${self.amount})"

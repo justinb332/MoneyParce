@@ -1,15 +1,49 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h1>Edit Expense</h1>
-<form method="post">
+  <h2>Edit Expense</h2>
+
+  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-</form>
+    <button type="submit">Edit Expense</button>
+  </form>
 
-<form action="{% url 'delete-expense' form.instance.slug %}" method="post" style="margin-top: 20px;">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this expense? This action cannot be undone.')">Delete Expense</button>
-</form>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const isRecurring = document.getElementById('id_is_recurring');
+      const recurrencePeriod = document.getElementById('id_recurrence_period');
+      const dayOfWeek = document.getElementById('id_recurrence_day_of_week')?.closest('p');
+      const dayOfMonth = document.getElementById('id_recurrence_day_of_month')?.closest('p');
+      const periodField = document.getElementById('id_recurrence_period')?.closest('p');
+
+      function updateVisibility() {
+        if (isRecurring && isRecurring.checked) {
+          if (periodField) periodField.style.display = 'block';
+
+          if (recurrencePeriod) {
+            if (recurrencePeriod.value === 'weekly') {
+              if (dayOfWeek) dayOfWeek.style.display = 'block';
+              if (dayOfMonth) dayOfMonth.style.display = 'none';
+            } else if (recurrencePeriod.value === 'monthly') {
+              if (dayOfWeek) dayOfWeek.style.display = 'none';
+              if (dayOfMonth) dayOfMonth.style.display = 'block';
+            } else {
+              if (dayOfWeek) dayOfWeek.style.display = 'none';
+              if (dayOfMonth) dayOfMonth.style.display = 'none';
+            }
+          }
+        } else {
+          if (periodField) periodField.style.display = 'none';
+          if (dayOfWeek) dayOfWeek.style.display = 'none';
+          if (dayOfMonth) dayOfMonth.style.display = 'none';
+        }
+      }
+
+      if (isRecurring) isRecurring.addEventListener('change', updateVisibility);
+      if (recurrencePeriod) recurrencePeriod.addEventListener('change', updateVisibility);
+
+      updateVisibility(); // run on page load
+    });
+  </script>
 {% endblock %}
