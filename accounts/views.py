@@ -1,8 +1,10 @@
 import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 import uuid
@@ -28,8 +30,6 @@ def register(request):
 def logout_view(request):
     logout(request)
     return render(request, 'accounts/logout.html')
-
-logger = logging.getLogger(__name__)
 
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
@@ -80,15 +80,15 @@ def reset_password_view(request):
 
 def verify_2fa_login(request):
     user_id = request.session.get('user_id_for_2fa')
-    logger.info(f"verify_2fa_login: Retrieved user ID {user_id} from session.") # Added log
+    logger.info(f"verify_2fa_login: Retrieved user ID {user_id} from session.")
     if not user_id:
-        logger.warning("verify_2fa_login: user_id not found in session. Redirecting to login.") # Added log
+        logger.warning("verify_2fa_login: user_id not found in session. Redirecting to login.")
         return redirect('login')
 
     try:
         user = CustomUser.objects.get(id=user_id)
     except CustomUser.DoesNotExist:
-        logger.error(f"verify_2fa_login: User with ID {user_id} not found. Redirecting to login.") # Added log
+        logger.error(f"verify_2fa_login: User with ID {user_id} not found. Redirecting to login.")
         return redirect('login')
 
     if request.method == 'POST':
@@ -96,7 +96,10 @@ def verify_2fa_login(request):
 
         if user.two_factor_secret and user.two_factor_expiry and timezone.now() < user.two_factor_expiry:
             if verification_code == user.two_factor_secret:
-                login(request, user)
+                CustomUserModel = get_user_model()
+                fresh_user = CustomUserModel.objects.get(pk=user.pk)
+
+                login(request, fresh_user)
                 del request.session['user_id_for_2fa']
                 return redirect('home')
             else:
@@ -109,43 +112,51 @@ def verify_2fa_login(request):
 
 @login_required
 def profile_settings(request):
-    user = request.user
-    form = EnableTwoFactorAuthForm(initial={'enable_2fa': user.is_2fa_enabled})
+    user = CustomUser.objects.get(pk=request.user.pk)
 
     if request.method == 'POST':
-        form = EnableTwoFactorAuthForm(request.POST)
-        if form.is_valid():
-            enable_2fa = form.cleaned_data['enable_2fa']
-            logger.info(f"User {user.username} submitted profile settings. Enable 2FA: {enable_2fa}")
+        enable_2fa = request.POST.get('enable_2fa') == 'on'
+        logger.info(f"[POST] Checkbox value: {enable_2fa}")
 
-            if enable_2fa and not user.is_2fa_enabled:
-                user.is_2fa_enabled = True
+        from django.core.mail import send_mail
+        from django.conf import settings
 
-                # Clear old 2FA info
-                user.two_factor_secret = None
-                user.two_factor_expiry = None
+        if enable_2fa and not user.is_2fa_enabled:
+            user.is_2fa_enabled = True
+            user.two_factor_secret = None
+            user.two_factor_expiry = None
 
-                # Generate new code
-                secret_code = str(uuid.uuid4().hex[:6]).upper()
-                user.two_factor_secret = secret_code
-                user.two_factor_expiry = timezone.now() + timezone.timedelta(minutes=10)
-                user.save()
+            # Generate code
+            secret_code = str(uuid.uuid4().hex[:6]).upper()
+            user.two_factor_secret = secret_code
+            user.two_factor_expiry = timezone.now() + timezone.timedelta(minutes=10)
+            user.save()
 
-                logger.info(f"User {user.username}: Generated code {secret_code}, expiry {user.two_factor_expiry}")
+            # Send email
+            send_mail(
+                subject='Your One-Time Verification Code',
+                message=f'Your verification code is: {secret_code}. It will expire in 10 minutes.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=False
+            )
 
-                messages.success(request,
-                                 'Two-Factor Authentication has been enabled. You will be asked to verify your login next time you sign in.')
-                return redirect('profile_settings')
+            logout(request)
+            request.session['user_id_for_2fa'] = user.id
+            messages.info(request, '2FA enabled. Check your email for a verification code.')
+            return redirect('verify_2fa_login')
 
 
-            elif not enable_2fa and user.is_2fa_enabled:
-                logger.info(f"User {user.username} is disabling 2FA.")
-                user.is_2fa_enabled = False
-                user.two_factor_secret = None
-                user.two_factor_expiry = None
-                user.save()
-                messages.success(request, 'Two-Factor Authentication has been disabled.')
-                return redirect('profile_settings')
+        elif not enable_2fa and user.is_2fa_enabled:
+            user.is_2fa_enabled = False
+            user.two_factor_secret = None
+            user.two_factor_expiry = None
+            user.save()
+            messages.success(request, '2FA disabled.')
+            return redirect('profile_settings')
 
-    context = {'form': form}
-    return render(request, 'accounts/profile_settings.html', context)
+    return render(request, 'home/settings.html')
+
+
+
+

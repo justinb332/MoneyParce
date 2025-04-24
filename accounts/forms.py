@@ -124,3 +124,11 @@ class EnableTwoFactorAuthForm(forms.Form):
         required=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
+
+    def __init__(self, *args, **kwargs):
+        initial = kwargs.get('initial', {})
+        super().__init__(*args, **kwargs)
+
+        if 'enable_2fa' in initial:
+            self.fields['enable_2fa'].initial = initial['enable_2fa']
+
