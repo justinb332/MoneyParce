@@ -1,3 +1,5 @@
+import os
+import openai
 from openai import OpenAI
 from django.conf import settings
 from reports.financial_ai import generate_financial_report
@@ -6,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from income.models import Income
 from expense.models import Expense
 
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    raise ValueError("OPENAI_API_KEY not set")
 
 def create_report():
     # Fetch incomes and expenses for the given user
@@ -27,5 +31,8 @@ def create_report():
 
 @login_required
 def display_report(request):
-   report = create_report()
-   return render(request, 'reports/report.html')
+    """
+    View to display the financial report to the user.
+    """
+    report = create_report()
+    return render(request, 'reports/report.html', {'report': report})
