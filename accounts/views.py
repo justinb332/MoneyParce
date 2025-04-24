@@ -37,6 +37,11 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         if user.is_2fa_enabled:
+            # Clear old 2FA info
+            user.two_factor_secret = None
+            user.two_factor_expiry = None
+
+            # Generate new code
             secret_code = str(uuid.uuid4().hex[:6]).upper()
             user.two_factor_secret = secret_code
             user.two_factor_expiry = timezone.now() + timezone.timedelta(minutes=10)
@@ -102,8 +107,6 @@ def verify_2fa_login(request):
 
     return render(request, 'accounts/verify_2fa_login.html')
 
-logger = logging.getLogger(__name__)
-
 @login_required
 def profile_settings(request):
     user = request.user
@@ -116,26 +119,25 @@ def profile_settings(request):
             logger.info(f"User {user.username} submitted profile settings. Enable 2FA: {enable_2fa}")
 
             if enable_2fa and not user.is_2fa_enabled:
-                logger.info(f"User {user.username} is enabling 2FA.")
+                user.is_2fa_enabled = True
+
+                # Clear old 2FA info
+                user.two_factor_secret = None
+                user.two_factor_expiry = None
+
+                # Generate new code
                 secret_code = str(uuid.uuid4().hex[:6]).upper()
                 user.two_factor_secret = secret_code
                 user.two_factor_expiry = timezone.now() + timezone.timedelta(minutes=10)
                 user.save()
+
                 logger.info(f"User {user.username}: Generated code {secret_code}, expiry {user.two_factor_expiry}")
 
-                subject = 'Your One-Time Verification Code'
-                message = f'Your verification code is: {secret_code}. This code will expire in 10 minutes.'
-                from_email = settings.DEFAULT_FROM_EMAIL
-                recipient_list = [user.email]
+                messages.success(request,
+                                 'Two-Factor Authentication has been enabled. You will be asked to verify your login next time you sign in.')
+                return redirect('profile_settings')
 
-                try:
-                    send_mail(subject, message, from_email, recipient_list)
-                    logger.info(f"User {user.username}: Email sent successfully to {user.email}")
-                    messages.info(request, 'A verification code has been sent to your email address. Please check your inbox.')
-                    return redirect('verify_2fa_login')
-                except Exception as e:
-                    logger.error(f"User {user.username}: Error sending email: {e}")
-                    messages.error(request, 'There was an error sending the verification email. Please try again later.')
+
             elif not enable_2fa and user.is_2fa_enabled:
                 logger.info(f"User {user.username} is disabling 2FA.")
                 user.is_2fa_enabled = False
