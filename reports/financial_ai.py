@@ -40,7 +40,11 @@ def generate_financial_report(data):
 
     Format it all using clean HTML. Wrap tables with <table>, <tr>, <th>, and <td>. Ensure the layout is suited for a webpage.
     
-    Provide a concise summary at the end and list out a couple tips that would help the user with their finances. Do not tell the user any technical details about their report such as "using HTML tables".
+    Provide a concise summary at the end.
+    Included with the summary include a few financial tips listed out.
+    DO NOT include ANY technical details. 
+    Be positive and supportive.
+    Double check your math.
     """
 
     payload = {
