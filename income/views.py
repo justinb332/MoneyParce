@@ -87,16 +87,16 @@ def edit_income(request, slug):
                 updated_income.next_occurrence = None
 
             updated_income.save()
-            return redirect('home')
+            return redirect('transactions')
     else:
         form = IncomeForm(instance=income)
 
-    return render(request, 'income/edit_income.html', {'form': form})
+    return render(request, 'income/edit_income.html', {'form': form, 'income': income})
 
 def delete_income(request, slug):
     income = get_object_or_404(Income, slug=slug)
     income.delete()
-    return redirect('home')
+    return redirect('transactions')
 
 def home(request):
     incomes = Income.objects.all().order_by('-date')

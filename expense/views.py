@@ -90,7 +90,7 @@ def edit_expense(request, slug):
                 updated_expense.next_occurrence = None
 
             updated_expense.save()
-            return redirect('home')
+            return redirect('transactions')
     else:
         form = ExpenseForm(instance=expense)
 
@@ -99,7 +99,7 @@ def edit_expense(request, slug):
 def delete_expense(request, slug):
     expense = get_object_or_404(Expense, slug=slug)
     expense.delete()
-    return redirect('home')
+    return redirect('transactions')
 
 def home(request):
     expenses = Expense.objects.all().order_by('-date')

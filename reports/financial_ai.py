@@ -32,11 +32,13 @@ def generate_financial_report(data):
         "Content-Type": "application/json"
     }
     prompt = f"""
+    DO NOT include ANY technical details. 
     Generate a financial summary report using the following data: {data}.
     The report should contain:
     1. Total Income and Total Expenses at the top.
     2. A breakdown of income and expenses using tables.
     3. A net balance calculation at the bottom.
+    If there is a negative net balance, make it red.
 
     Format it all using clean HTML. Wrap tables with <table>, <tr>, <th>, and <td>. Ensure the layout is suited for a webpage.
     
