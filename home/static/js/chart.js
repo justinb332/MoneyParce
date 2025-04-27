@@ -1,4 +1,10 @@
-function chart(input, title, subtitle, type, colorChoice) {
+import { PieChartStrategy } from './PieChartStrategy.js';
+import { BarChartStrategy } from './BarChartStrategy.js';
+
+export function chart(input, title, subtitle, strategy, colorChoice) {
+    google.charts.load('current', {
+        packages: ['corechart', 'bar']
+    });
     google.charts.setOnLoadCallback(function () {
 
         let colorsArray = getColor(colorChoice);
@@ -43,11 +49,9 @@ function chart(input, title, subtitle, type, colorChoice) {
         console.log('Prices:', prices);
         console.log('Final:', chartData);
 
-        if (type === 'pie') {
-            drawPie(chartData, title, subtitle, colorsArray);
-        } else {
-            drawBar(chartData, title, subtitle, colorsArray);
-        }
+        console.log('Strategy:', strategy);
+        console.log('Methods in strategy:', Object.getOwnPropertyNames(strategy));
+        strategy.draw(chartData, title, subtitle, colorsArray)
     });
 }
 

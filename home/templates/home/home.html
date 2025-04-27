@@ -30,20 +30,29 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { BarChartStrategy } from "{% static 'js/BarChartStrategy.js' %}";
+        import { PieChartStrategy } from "{% static 'js/PieChartStrategy.js' %}";
+        import { chart } from "{% static 'js/chart.js' %}";
+
         const colors = ['color1', 'color2', 'color3', 'color4'];
         const currentColorIndex = { bar: 0, pie: 0 };
 
         function renderCharts() {
-            chart({{ expenses|safe }}, 'Bar Chart', '', 'bar', colors[currentColorIndex.bar]);
-            chart({{ expenses|safe }}, 'Pie Chart', '', 'pie', colors[currentColorIndex.pie]);
+            chart({{ expenses|safe }}, 'Bar Chart', '', new BarChartStrategy(), colors[currentColorIndex.bar]);
+            chart({{ expenses|safe }}, 'Pie Chart', '', new PieChartStrategy(), colors[currentColorIndex.pie]);
         }
 
-        function changeColor(type) {
+        window.changeColor = function(type) {
             currentColorIndex[type] = (currentColorIndex[type] + 1) % colors.length;
-            chart({{ expenses|safe }}, type === 'bar' ? 'Bar Chart' : 'Pie Chart', '',
-                  type, colors[currentColorIndex[type]]);
-        }
+            let strategy;
+            if (type === 'bar') {
+                strategy = new BarChartStrategy();
+            } else {
+                strategy = new PieChartStrategy();
+            }
+            chart({{ expenses|safe }}, 'Bar Chart', '', strategy, colors[currentColorIndex[type]]);
+        };
         // draw only when data exists
         if ({{ expenses|safe }}.length) renderCharts();
     </script>
