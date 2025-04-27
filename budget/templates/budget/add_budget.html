@@ -1,0 +1,21 @@
+<!-- add_budget.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Add Budget</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+{% if form.non_field_errors %}
+    <ul>
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
