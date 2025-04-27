@@ -3,51 +3,57 @@
 {% block title %}Home - MoneyParce{% endblock %}
 
 {% block content %}
-    <div style="padding: 0 100px;">
-        <div style="display: flex; justify-content: space-between; gap: 40px;">
-            {# Bar Chart #}
-            <div style="text-align: center;">
-                <h3>Recent Transactions</h3>
-                <div id="bar" style="width: 800px; height: 500px;"></div>
-                <button onclick="changeColor('bar')" style="margin-top: 10px;">Change Color</button>
-            </div>
+<div style="padding: 0 60px;">
 
-            {# Pie Chart #}
-            <div style="text-align: center;">
-                <h3>Today's Transactions</h3>
-                {% if latest_transaction_date != today_date %}
-                    <p>No transactions today</p>
-                {% else %}
-                    <div id="pie" style="width: 800px; height: 500px;"></div>
-                    <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
-                {% endif %}
-            </div>
+    {# ---------- SHOW ONLY WHEN LOGGED-IN ---------- #}
+    {% if user.is_authenticated %}
+    <div style="display: flex; justify-content: space-between; gap: 40px;">
+
+        {# Bar Chart #}
+        <div style="text-align: center;">
+            <h3>Recent Transactions</h3>
+            <div id="bar" style="width: 800px; height: 500px;"></div>
+            <button onclick="changeColor('bar')" style="margin-top: 10px;">Change Color</button>
+        </div>
+
+        {# Pie Chart #}
+        <div style="text-align: center;">
+            <h3>Today's Transactions</h3>
+            {% if latest_transaction_date and latest_transaction_date == today_date %}
+                <div id="pie" style="width: 800px; height: 500px;"></div>
+            {% elif latest_transaction_date %}
+                <p>No transactions today</p>
+            {% else %}
+                <p>You haven’t added any expenses yet</p>
+            {% endif %}
+            <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
         </div>
     </div>
 
     <script>
         const colors = ['color1', 'color2', 'color3', 'color4'];
-        const currentColorIndex = {
-            bar: 0,
-            pie: 0
-        };
+        const currentColorIndex = { bar: 0, pie: 0 };
 
         function renderCharts() {
-            chart({{ expenses|safe }}, 'Bar Chart Title', 'Subtitle', 'bar', colors[currentColorIndex.bar]);
-            chart({{ expenses|safe }}, 'Pie Chart Title', 'Subtitle', 'pie', colors[currentColorIndex.pie]);
+            chart({{ expenses|safe }}, 'Bar Chart', '', 'bar', colors[currentColorIndex.bar]);
+            chart({{ expenses|safe }}, 'Pie Chart', '', 'pie', colors[currentColorIndex.pie]);
         }
 
         function changeColor(type) {
             currentColorIndex[type] = (currentColorIndex[type] + 1) % colors.length;
-            chart({{ expenses|safe }},
-                type === 'bar' ? 'Bar Chart Title' : 'Pie Chart Title',
-                'Subtitle',
-                type,
-                colors[currentColorIndex[type]]
-            );
+            chart({{ expenses|safe }}, type === 'bar' ? 'Bar Chart' : 'Pie Chart', '',
+                  type, colors[currentColorIndex[type]]);
         }
-
-        // Initial render
-        renderCharts();
+        // draw only when data exists
+        if ({{ expenses|safe }}.length) renderCharts();
     </script>
+
+    {% else %}
+        <h2>Welcome to MoneyParce!</h2>
+        <p>Please <a href="{% url 'login' %}">log in</a> or
+           <a href="{% url 'register' %}">create an account</a> to start tracking
+           your income and expenses.</p>
+    {% endif %}
+
+</div>
 {% endblock %}
