@@ -1,9 +1,6 @@
 import { ChartStrategy } from './ChartStrategy.js';
 
 export class BarChartStrategy extends ChartStrategy {
-    hi() {
-        console.log('test')
-    }
     draw(chartData, title, subtitle, colorArray) {
         const data = google.visualization.arrayToDataTable(chartData);
 

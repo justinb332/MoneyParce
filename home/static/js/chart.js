@@ -1,7 +1,7 @@
 import { PieChartStrategy } from './PieChartStrategy.js';
 import { BarChartStrategy } from './BarChartStrategy.js';
 
-export function chart(input, title, subtitle, strategy, colorChoice) {
+export function chart(input, title, subtitle, strategy, colorChoice, num_Days) {
     google.charts.load('current', {
         packages: ['corechart', 'bar']
     });
@@ -44,13 +44,6 @@ export function chart(input, title, subtitle, strategy, colorChoice) {
         const title = 'Transactions';
         const subtitle = 'Money';
 
-        console.log('Categories:', categories);
-        console.log('Dates:', dates);
-        console.log('Prices:', prices);
-        console.log('Final:', chartData);
-
-        console.log('Strategy:', strategy);
-        console.log('Methods in strategy:', Object.getOwnPropertyNames(strategy));
         strategy.draw(chartData, title, subtitle, colorsArray)
     });
 }
