@@ -21,6 +21,18 @@ def budget_list(request):
         elif budget.timeframe == 'monthly':
             total_spent = budget.total_spent('monthly')
 
+        total_spent = budget.total_spent(budget.timeframe)
+        remaining_amount = budget.amount - total_spent
+        over_budget = None
+
+        # Check if the budget is over
+        if total_spent > budget.amount:
+            over_budget = total_spent - budget.amount
+
+        # Add to each budget object
+        budget.remaining_amount = remaining_amount
+        budget.over_budget = over_budget
+
         budget_data.append({
             'budget': budget,
             'total_spent': total_spent,
