@@ -1,17 +1,37 @@
+import json
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-
 from accounts.models import CustomUser
 from income.models import Income
 from expense.models import Expense
+from django.core.serializers.json import DjangoJSONEncoder
+from datetime import date
 
 def home(request):
-    expenses = (Expense.objects.all().order_by('-date'))
-    incomes = Income.objects.all().order_by('-date')
-    return render(request, 'home/home.html', {'expenses': expenses, 'incomes': incomes})
+    expenses = list(Expense.objects.all().order_by('-date').values('amount', 'category__name', 'date'))
+    incomes = list(Income.objects.all().order_by('-date').values('amount', 'category__name', 'date'))
+
+    latest_expense = Expense.objects.latest('date')
+    latest_transaction_date = latest_expense.date.date()
+    today_date = date.today()
+
+    # Formatting
+    for expense in expenses:
+        expense['date'] = expense['date'].strftime('%m-%d')
+    for income in incomes:
+        income['date'] = income['date'].strftime('%m-%d')
+    expenses_json = json.dumps(expenses, cls=DjangoJSONEncoder)
+    incomes_json = json.dumps(incomes, cls=DjangoJSONEncoder)
+
+    return render(request, 'home/home.html', {
+        'expenses': expenses_json,
+        'incomes': incomes_json,
+        'latest_transaction_date': latest_transaction_date,
+        'today_date': today_date,
+    })
 
 def transactions_view(request):
     expenses = Expense.objects.all()
