@@ -1,13 +1,12 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
-
 from accounts.models import CustomUser
 
 CHOICES = [
-        ('question1', "Question 1"),
-        ('question2', "Question 2"),
-        ('question3', "Question 3"),
+        ('question1', "What is the name of the first pet you owned?"),
+        ('question2', "What is your mother's maiden name?"),
+        ('question3', "What street did you grow up on?"),
     ]
 
 class SignUpForm(UserCreationForm):
