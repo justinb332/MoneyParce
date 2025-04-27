@@ -3,7 +3,7 @@
 {% block title %}Home - MoneyParce{% endblock %}
 
 {% block content %}
-    <div style="padding: 0 60px;">
+    <div style="padding: 0 100px;">
         <div style="display: flex; justify-content: space-between; gap: 40px;">
             {# Bar Chart #}
             <div style="text-align: center;">
@@ -19,8 +19,8 @@
                     <p>No transactions today</p>
                 {% else %}
                     <div id="pie" style="width: 800px; height: 500px;"></div>
+                    <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
                 {% endif %}
-                <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
             </div>
         </div>
     </div>
