@@ -36,17 +36,25 @@ def home(request):
         incomes_qs = []
         latest_date = None
 
+    unique_expense_days = {e['date'].date() for e in expenses_qs}
+
     expenses = list(expenses_qs)
     incomes  = list(incomes_qs)
-
     for e in expenses:
         e['date'] = e['date'].strftime('%m-%d')
     for i in incomes:
         i['date'] = i['date'].strftime('%m-%d')
 
+    num_unique_days = len(unique_expense_days)
+
+    print(num_unique_days)
     context = {
         'expenses': json.dumps(expenses, cls=DjangoJSONEncoder),
         'incomes': json.dumps(incomes, cls=DjangoJSONEncoder),
+        'incomes_raw': incomes,
+        'num_days': num_unique_days,
+        'has_expenses': len(expenses) > 0,
+        'has_income': len(incomes) > 0,
         'latest_transaction_date': latest_date,
         'today_date': date.today(),
     }
