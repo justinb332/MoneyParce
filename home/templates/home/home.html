@@ -12,8 +12,12 @@
         {# Bar Chart #}
         <div style="text-align: center;">
             <h3>Recent Transactions</h3>
-            <div id="bar" style="width: 800px; height: 500px;"></div>
-            <button onclick="changeColor('bar')" style="margin-top: 10px;">Change Color</button>
+            {% if expenses.amount %}
+                <div id="bar" style="width: 800px; height: 500px;"></div>
+                <button onclick="changeColor('bar')" style="margin-top: 10px;">Change Color</button>
+            {% else %}
+                <p>You haven’t added any expenses yet</p>
+            {% endif %}
         </div>
 
         {# Pie Chart #}
@@ -21,12 +25,12 @@
             <h3>Today's Transactions</h3>
             {% if latest_transaction_date and latest_transaction_date == today_date %}
                 <div id="pie" style="width: 800px; height: 500px;"></div>
+                <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
             {% elif latest_transaction_date %}
                 <p>No transactions today</p>
             {% else %}
                 <p>You haven’t added any expenses yet</p>
             {% endif %}
-            <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
         </div>
     </div>
 
@@ -51,7 +55,8 @@
             } else {
                 strategy = new PieChartStrategy();
             }
-            chart({{ expenses|safe }}, 'Bar Chart', '', strategy, colors[currentColorIndex[type]]);
+            if ({{ expenses|safe }}.length) chart({{ expenses|safe }}, 'Bar Chart', '', strategy,
+                colors[currentColorIndex[type]]);
         };
         // draw only when data exists
         if ({{ expenses|safe }}.length) renderCharts();
