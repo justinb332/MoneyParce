@@ -1,49 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Edit Income</h2>
+<div class="d-flex flex-column min-vh-100">
+  <div class="container flex-grow-1 mt-4">
+  <div class="card shadow">
+    <div class="card-header">
+      <h2 class="text-center">Edit Income</h2>
+    </div>
+    <div class="card-body">
+      <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-  </form>
+        {% for field in form %}
+          <div class="form-group mb-3">
+            <!-- Add an asterisk for required fields -->
+            <label for="{{ field.id_for_label }}" class="{% if field.field.required %}required{% endif %}">
+              {{ field.label }}
+              {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+            </label>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const isRecurring = document.getElementById('id_is_recurring');
-      const recurrencePeriod = document.getElementById('id_recurrence_period');
-      const dayOfWeek = document.getElementById('id_recurrence_day_of_week')?.closest('p');
-      const dayOfMonth = document.getElementById('id_recurrence_day_of_month')?.closest('p');
-      const periodField = document.getElementById('id_recurrence_period')?.closest('p');
+            {{ field }}
 
-      function updateVisibility() {
-        if (isRecurring && isRecurring.checked) {
-          if (periodField) periodField.style.display = 'block';
+            <!-- Display errors inline -->
+            {% if field.errors %}
+              <div class="invalid-feedback d-block">
+                {{ field.errors|join:', ' }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
 
-          if (recurrencePeriod) {
-            if (recurrencePeriod.value === 'weekly') {
-              if (dayOfWeek) dayOfWeek.style.display = 'block';
-              if (dayOfMonth) dayOfMonth.style.display = 'none';
-            } else if (recurrencePeriod.value === 'monthly') {
-              if (dayOfWeek) dayOfWeek.style.display = 'none';
-              if (dayOfMonth) dayOfMonth.style.display = 'block';
-            } else {
-              if (dayOfWeek) dayOfWeek.style.display = 'none';
-              if (dayOfMonth) dayOfMonth.style.display = 'none';
-            }
-          }
-        } else {
-          if (periodField) periodField.style.display = 'none';
-          if (dayOfWeek) dayOfWeek.style.display = 'none';
-          if (dayOfMonth) dayOfMonth.style.display = 'none';
-        }
-      }
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+    </div>
+  </div>
 
-      if (isRecurring) isRecurring.addEventListener('change', updateVisibility);
-      if (recurrencePeriod) recurrencePeriod.addEventListener('change', updateVisibility);
 
-      updateVisibility(); // run on page load
-    });
-  </script>
+<!-- Custom Styles -->
+<style>
+  /* Highlight required fields */
+  .form-group .required {
+    font-weight: bold;
+  }
+
+  .form-group input:required {
+    border: 2px solid #dc3545;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  }
+
+  .form-group textarea:required {
+    border: 2px solid #dc3545;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  }
+
+  .form-group select:required {
+    border: 2px solid #dc3545;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  }
+</style>
 {% endblock %}

@@ -4,24 +4,52 @@
 {% block title %}Settings - MoneyParce{% endblock %}
 
 {% block content %}
+<div>
+    <h2>Settings</h2>
     <div>
-        <h2>Settings</h2>
-        <div>
-            <h3>Account</h3>
-            <form action="{% url 'settings_delete' %}" method="post"
-            onsubmit="return confirm('Are you sure? This action cannot be undone.');">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-danger" id="delete_account">Delete Account</button>
-            </form>
+        <h3>Account Settings</h3>
+        <h3>Two-Factor Authentication</h3>
+        <form method="post" action="{% url 'profile_settings' %}">
+            {% csrf_token %}
 
+            <div class="form-check mb-3">
+                <input type="checkbox" name="enable_2fa" id="id_enable_2fa"
+                       class="form-check-input"
+                       {% if request.user.is_2fa_enabled %}checked{% endif %}>
 
-            <form action="{% url 'reset_data' %}" method="post"
-                  style="margin-top: 20px;"
-                  onsubmit="return confirm('Are you sure? This action cannot be undone.');">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-danger" id="reset_data">Reset Data</button>
-                </form>
-        </div>
+                <label for="id_enable_2fa" class="form-check-label">
+                    Enable Two-Factor Authentication<br>
+                    <small class="text-muted">You’ll be asked to verify with an email code next time you log in.</small>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
     </div>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div style="margin-top: 40px;">
+        <h3 style="color: red;">Permanent Changes</h3>
+
+        <form action="{% url 'settings_delete' %}" method="post"
+              onsubmit="return confirm('Are you sure? This action cannot be undone.');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" id="delete_account">Delete Account</button>
+        </form>
+
+        <form action="{% url 'reset_data' %}" method="post"
+              style="margin-top: 20px;"
+              onsubmit="return confirm('Are you sure? This action cannot be undone.');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" id="reset_data">Reset Data</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

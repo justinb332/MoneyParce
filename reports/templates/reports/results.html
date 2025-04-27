@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content">
+    <header>
+        <h1>Detailed Financial Report</h1>
+    </header>
+
+    <div class="report-content">
+        <!-- Render the OpenAI-generated report in HTML format -->
+        {{ report|safe }}
+    </div>
+</div>
+
+<!-- Inline CSS for this Report -->
+<style>
+    /* Container Styling for the Report */
+    .content {
+        padding: 20px;
+        max-width: 1000px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header Text Styling */
+    header {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #007bff;
+    }
+
+    /* Summary Styling */
+    .summary {
+        font-size: 1.3rem;
+        margin-top: 30px;
+        text-align: center;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .bottom-summary {
+        margin-bottom: 50px; /* Extra bottom space from footer */
+    }
+
+    /* Rendered Report Content Tables Styling */
+    .report-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    .report-content th,
+    .report-content td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .report-content th {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .report-content tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+{% endblock %}

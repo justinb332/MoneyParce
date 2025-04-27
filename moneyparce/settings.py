@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'visuals',
     'expense',
     'income',
-    'django_cron',
+#    'django_cron',  # was having TypeError: 'class Meta' got invalid attribute(s): index_together
     'reports',
+    'budget',
 ]
 
 MIDDLEWARE = [
