@@ -7,7 +7,6 @@
 <div>
     <h2>Settings</h2>
     <div>
-        <h3>Account Settings</h3>
         <h3>Two-Factor Authentication</h3>
         <form method="post" action="{% url 'profile_settings' %}">
             {% csrf_token %}
@@ -34,6 +33,8 @@
             {% endfor %}
         </ul>
     {% endif %}
+
+    <hr>
 
     <div style="margin-top: 40px;">
         <h3 style="color: red;">Permanent Changes</h3>
