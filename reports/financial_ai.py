@@ -39,6 +39,7 @@ def generate_financial_report(data):
     2. A breakdown of income and expenses using tables.
     3. A net balance calculation at the bottom.
     If there is a negative net balance, make it red.
+    If there is a positive net balance, make it green.
 
     Format it all using clean HTML. Wrap tables with <table>, <tr>, <th>, and <td>. Ensure the layout is suited for a webpage.
     
@@ -47,6 +48,7 @@ def generate_financial_report(data):
     DO NOT include ANY technical details. 
     Be positive and supportive.
     Double check your math.
+    Center your report pretty please.
     """
 
     payload = {
