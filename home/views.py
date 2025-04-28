@@ -10,7 +10,9 @@ from django.urls import reverse_lazy
 from accounts.models import CustomUser
 from income.models import Income
 from expense.models import Expense
+from budget.models import Budget
 from django.core.serializers.json import DjangoJSONEncoder
+
 
 def home(request):
     if request.user.is_authenticated:
@@ -92,5 +94,6 @@ def reset_data(request):
     if request.method == 'POST':
         Income.objects.filter(user=request.user).delete()
         Expense.objects.filter(user=request.user).delete()
+        Budget.objects.filter(user=request.user).delete()
         return redirect('settings')
     return redirect('settings')
