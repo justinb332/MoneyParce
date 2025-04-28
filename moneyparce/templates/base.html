@@ -34,12 +34,17 @@
         <nav>
             <ul>
                 <li><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                <li><a class="nav-link" href="{% url 'transactions' %}">Transactions</a></li>
-                <li><a class="nav-link" href="{% url 'reports_home' %}">Reports</a></li>
-                <li><a class="nav-link" href="{% url 'budget_list' %}">Budget</a></li>
-                <li><a class="nav-link disabled" style="color: #cccccc;">Logged in as {{ user.username }}</a></li>
-                <li><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                <li><a class="nav-link" href="{% url 'settings' %}">Settings</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-link" href="{% url 'transactions' %}">Transactions</a></li>
+                    <li><a class="nav-link" href="{% url 'reports_home' %}">Reports</a></li>
+                    <li><a class="nav-link" href="{% url 'budget_list' %}">Budget</a></li>
+                    <li><a class="nav-link disabled" style="color: #fff;">Logged in as {{ user.username }}</a></li>
+                    <li><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                    <li><a class="nav-link" href="{% url 'settings' %}">Settings</a></li>
+                {% else %}
+                    <li><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

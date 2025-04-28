@@ -1,0 +1,126 @@
+/* Some generic CSS, feel more than free to change */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height : 100%;
+}
+
+body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+header nav ul li {
+    margin: 0 1rem;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+main {
+    min-height: 85vh;
+    flex-grow: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 2rem;
+}
+
+footer {
+    width: 100%;
+    bottom: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+}
+
+h2 {
+    font-weight: 600;
+}
+
+h3 {
+
+}
+
+.blue-btn {
+    background-color: #007bff; /* Bootstrap's primary blue color */
+    color: white;
+    text-decoration: none; /* Removes underline from link */
+    padding: 10px 20px; /* Adds padding to make it look like a button */
+    border-radius: 5px; /* Optional: Rounds the button edges */
+    border: none; /* Removes border */
+    display: inline-block; /* Ensures it behaves like a button */
+    font-weight: bold; /* Makes text bold */
+    transition: 0.3s ease-in-out; /* Adds smooth hover effect */
+}
+
+.blue-btn:hover {
+    background-color: #0056b3; /* Darker blue for hover effect */
+}
+
+.container {
+    min-height: 100%;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+@media (max-width: 768px) {
+    header nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header nav ul li {
+        margin: 0.5rem 0;
+    }
+}
+
+.color-change-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.color-change-btn:hover {
+    background-color: #45a049;
+}
