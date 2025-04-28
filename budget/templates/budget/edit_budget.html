@@ -1,21 +1,78 @@
-<!-- add_budget.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Edit Budget</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+    <div class="d-flex flex-column min-vh-100">
+        <div class="container flex-grow-1 mt-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h2 class="text-center">Edit Budget</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
 
-{% if form.non_field_errors %}
-    <ul>
-        {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+                        <!-- Looping Through Form Fields -->
+                        {% for field in form %}
+                            <div class="form-group mb-3">
+                                <!-- Add an asterisk for required fields -->
+                                <label for="{{ field.id_for_label }}" class="{% if field.field.required %}required{% endif %}">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                </label>
 
+                                <!-- Render the Form Field -->
+                                {{ field }}
+
+                                <!-- Display Field Errors Inline -->
+                                {% if field.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ field.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Handling Non-Field Errors -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <!-- Submit and Delete Buttons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Styles -->
+    <style>
+        /* Highlight required fields */
+        .form-group .required {
+            font-weight: bold;
+        }
+
+        .form-group input:required {
+            border: 2px solid #dc3545;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .form-group textarea:required {
+            border: 2px solid #dc3545;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .form-group select:required {
+            border: 2px solid #dc3545;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+    </style>
 {% endblock %}
