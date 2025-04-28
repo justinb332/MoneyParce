@@ -1,49 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Budgets</h1>
-<ul>
-    {% for item in budget_data %}
-        <li>
-            <strong>{{ item.budget.name }}</strong> - ${{ item.budget.amount }}
-            ({{ item.budget.get_timeframe_display }}) - Category: {{ item.budget.category.name }}
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15vh; text-align: center; gap: 10px;">
+    <h1>Budgets</h1>
+    <p style="font-weight: bold; font-size: 18px;">View, add, edit, and delete all budgets here!</p> <!-- Bold Subtitle -->
+    <!-- Styled Add Budget Button -->
+        <a
+            href="{% url 'add_budget' %}"
+            style="
+                margin-top: 10px;
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                text-decoration: none;
+                transition: background-color 0.3s ease;"
+            onmouseover="this.style.backgroundColor='#0056b3'"
+            onmouseout="this.style.backgroundColor='#007BFF'"
+        >Add budget</a>
+    </div>
 
-            <!-- Links to edit and delete the budget -->
-            <a href="{% url 'edit_budget' item.budget.pk %}">Edit</a> |
-            <a href="{% url 'delete_budget' item.budget.pk %}" class="text-danger">Delete</a>
-
-            <!-- Show total spent and display "Over budget" in red if applicable -->
-            {% if item.budget.timeframe == 'daily' %}
-                <p>
-                    Total Spent Today: ${{ item.total_spent }} |
+<!-- Added styling to list budgets below the button -->
+    <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            {% for item in budget_data %}
+                <div style="
+                border: 1px solid #ddd;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 8px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                max-width: 400px;
+                width: 100%;
+                text-align: center;"
+            >
+                    <h2 style="margin: 0; color: #333;">{{ item.budget.name }}</h2>
+                    <!-- Amount, Category, and Time Frame -->
+                <p style="margin: 10px 0; font-size: 16px; color: #555;">
+                    <span><strong>${{ item.budget.amount }}</strong></span> |
+                    <span>{{ item.budget.category.name }}</span> |
+                    <span style="font-weight: bold;">{{ item.budget.get_timeframe_display }}</span>
+                </p>
+                <!-- Total spent and remaining -->
+                <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                    <strong>Total Spent:</strong> ${{ item.total_spent }} |
+                <strong>Remaining:</strong>
                     {% if item.budget.over_budget %}
-                        <span style="color: #ad1c1c;"> Over Budget By ${{ item.budget.over_budget }}</span>
+                        <span style="color: #ad1c1c;">Over Budget By ${{ item.budget.over_budget }}</span>
                     {% else %}
-                        Remaining: ${{ item.budget.remaining_amount }}
+                        ${{ item.budget.remaining_amount }}
                     {% endif %}
                 </p>
-            {% elif item.budget.timeframe == 'weekly' %}
-                <p>
-                    Total Spent This Week: ${{ item.total_spent }} |
-                    {% if item.budget.over_budget %}
-                        <span style="color: #ad1c1c;"> Over Budget By ${{ item.budget.over_budget }}</span>
-                    {% else %}
-                        Remaining: ${{ item.budget.remaining_amount }}
-                    {% endif %}
-                </p>
-            {% elif item.budget.timeframe == 'monthly' %}
-                <p>
-                    Total Spent This Month: ${{ item.total_spent }} |
-                    {% if item.budget.over_budget %}
-                        <span style="color: #ad1c1c;">| Over Budget By ${{ item.budget.over_budget }}</span>
-                    {% else %}
-                        Remaining: ${{ item.budget.remaining_amount }}
-                    {% endif %}
-                </p>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'add_budget' %}">Add a new budget</a>
+                <!-- Edit and Delete links -->
+                <div style="margin-top: 10px;">
+                    <a href="{% url 'edit_budget' item.budget.pk %}" style="margin-right: 10px; color: #0077cc; text-decoration: none;">Edit</a>
+                    <a href="{% url 'delete_budget' item.budget.pk %}" style="color: #cc0000; text-decoration: none;">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
