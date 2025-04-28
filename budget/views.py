@@ -17,7 +17,9 @@ def add_budget(request):
         form = BudgetForm(request.POST)
         if form.is_valid():
             try:
-                form.save()
+                budget = form.save(commit=False)  # Don't save to DB yet
+                budget.user = request.user        # Attach the logged-in user
+                budget.save()                     # Now save it
                 return redirect('budget_list')
             except IntegrityError:
                 form.add_error(None, "A budget with this category and timeframe already exists.")

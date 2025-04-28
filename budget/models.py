@@ -26,7 +26,7 @@ class Budget(models.Model):
     # Add the unique constraint here to prevent duplicate category-timeframe combinations
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['category', 'timeframe'], name='unique_category_timeframe')
+            models.UniqueConstraint(fields=['user', 'category', 'timeframe'], name='unique_user_category_timeframe')
         ]
 
     def __str__(self):

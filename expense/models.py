@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils.crypto import get_random_string
 from django.conf import settings
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -35,7 +36,9 @@ class Expense(models.Model):
 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey('expense.Category', on_delete=models.CASCADE, null=True)
-    date = models.DateTimeField(auto_now_add=True)
+
+    date = models.DateTimeField(default=timezone.now)
+
     notes = models.TextField(null=True, blank=True)
 
     is_recurring = models.BooleanField(default=False)

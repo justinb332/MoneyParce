@@ -7,10 +7,12 @@ from .models import Expense, Category
 
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
-    # Customize the fields displayed in the list view of the admin panel
     list_display = ('name', 'amount', 'category', 'date', 'notes')
-    search_fields = ('name', 'category__name')  # Allow searching by name and category
-    list_filter = ('category', 'date')  # Add filters for category and date
+    search_fields = ('name', 'category__name')
+    list_filter = ('category', 'date')
+    fields = ('user', 'name', 'amount', 'category', 'date', 'notes',
+              'is_recurring', 'recurrence_period',
+              'recurrence_day_of_week', 'recurrence_day_of_month', 'next_occurrence')
 
 
 @admin.register(Category)
