@@ -73,18 +73,32 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         return self.request.GET.get('next', reverse('home'))
 
+from django.core.exceptions import ValidationError
+
 def reset_password_view(request):
     if request.method == 'POST':
         form = CustomPasswordResetForm(request.POST)
         if form.is_valid():
-            user = CustomUser.objects.get(username=form.cleaned_data['username'])
-            user.set_password(form.cleaned_data['new_password1'])
-            user.save()
-            return redirect('login')
+            try:
+                user = CustomUser.objects.get(username=form.cleaned_data['username'])
+            except CustomUser.DoesNotExist:
+                form.add_error(None, 'Invalid username.')
+                return render(request, 'accounts/reset.html', {'form': form})
+
+            provided_answer = form.cleaned_data['security_answer'].strip().lower()
+            correct_answer = user.security_answer.strip().lower()
+
+            if provided_answer == correct_answer:
+                user.set_password(form.cleaned_data['new_password1'])
+                user.save()
+                messages.success(request, 'Password reset successful. You can now log in.')
+                return redirect('login')
+            else:
+                form.add_error('security_answer', 'Security answer does not match.')
     else:
         form = CustomPasswordResetForm()
-    return render(request, 'accounts/reset.html', {'form': form})
 
+    return render(request, 'accounts/reset.html', {'form': form})
 
 #logger = logging.getLogger(__name__)
 
