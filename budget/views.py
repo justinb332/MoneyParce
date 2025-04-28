@@ -4,39 +4,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from .models import Budget
 from .forms import BudgetForm
+from budget.utils.budget_manager import BudgetManager
 
 def budget_list(request):
-    # Get all budget and order by timeframe (daily first, weekly second, monthly last)
-    budgets = Budget.objects.all().order_by("timeframe")
-
-    # Precompute the total spent for each budget for today, this week, or this month
-    budget_data = []
-    for budget in budgets:
-        total_spent = None
-
-        if budget.timeframe == 'daily':
-            total_spent = budget.total_spent('daily')
-        elif budget.timeframe == 'weekly':
-            total_spent = budget.total_spent('weekly')
-        elif budget.timeframe == 'monthly':
-            total_spent = budget.total_spent('monthly')
-
-        total_spent = budget.total_spent(budget.timeframe)
-        remaining_amount = budget.amount - total_spent
-        over_budget = None
-
-        # Check if the budget is over
-        if total_spent > budget.amount:
-            over_budget = total_spent - budget.amount
-
-        # Add to each budget object
-        budget.remaining_amount = remaining_amount
-        budget.over_budget = over_budget
-
-        budget_data.append({
-            'budget': budget,
-            'total_spent': total_spent,
-        })
+    manager = BudgetManager()
+    budget_data = manager.get_budget_summaries(request.user)
 
     return render(request, 'budget/budget_list.html', {'budget_data': budget_data})
 
