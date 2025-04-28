@@ -1,14 +1,54 @@
-<!-- reports/templates/reports/home.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
+    <div style="text-align: center; margin-bottom: 30px;">
         <h1>Generate a Report</h1>
-        <p>You can optionally select a date range for the report, or leave the fields blank to include all dates.</p>
-        <form method="post">
+        <p style="font-weight: bold; font-size: 18px;">You can optionally select a date range for the report, or leave the fields blank to include all dates.</p>
+    </div>
+
+    <div style="display: flex; justify-content: center; align-items: center; height: 50vh;">
+        <form method="post" id="report-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Generate Report</button>
+            {% if form.errors %}
+        <div style="color: red; font-weight: bold;">
+            <ul>
+                {% for error in form.errors.values %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+            <button
+                    style="
+                    margin-top: 10px;
+                    padding: 10px 20px;
+                    background-color: #007BFF;
+                    color: #fff;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: background-color 0.3s ease;"
+                    onmouseover="this.style.backgroundColor='#0056b3'"
+                    onmouseout="this.style.backgroundColor='#007BFF'"
+            >Generate Report</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('report-form').addEventListener('submit', function (e) {
+            const startDate = document.querySelector('[name="start_date"]'); // Replace with your form field name
+            const endDate = document.querySelector('[name="end_date"]');   // Replace with your form field name
+
+            if (
+                (startDate.value && !endDate.value) ||   // If only start date is filled
+                (!startDate.value && endDate.value)      // If only end date is filled
+            ) {
+                e.preventDefault(); // Cancel the submission
+                alert('Please fill both date fields or leave them blank.');
+            }
+        });
+    </script>
 {% endblock %}
