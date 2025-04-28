@@ -40,12 +40,12 @@ def display_report(request, start_date, end_date):
     View to display the financial report to the user.
     """
     if start_date != None or end_date != None:
-        incomes = Income.objects.filter(date__range=(start_date, end_date))
-        expenses = Expense.objects.filter(date__range=(start_date, end_date))
+        incomes = Income.objects.filter(user=request.user, date__range=(start_date, end_date))
+        expenses = Expense.objects.filter(user=request.user, date__range=(start_date, end_date))
     # Fetch incomes and expenses for the given user
     else:
-        incomes = Income.objects.all()
-        expenses = Expense.objects.all()
+        incomes = Income.objects.filter(user=request.user)
+        expenses = Expense.objects.filter(user=request.user)
 
     # Prepare data for the financial report
     income_data = [{'category': inc.category, 'amount': inc.amount} for inc in incomes]

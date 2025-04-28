@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.db import models
 from django.utils import timezone
 from expense.models import Category, Expense  # Import Category model if needed
+from moneyparce import settings
 
 
 class Budget(models.Model):
@@ -15,6 +16,11 @@ class Budget(models.Model):
     timeframe = models.CharField(
         max_length=10,
         choices=[('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly')]
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,  # Ensures the budget is deleted when the user is deleted
+        related_name="budgets",  # Allows reverse access via 'user.budgets'
     )
 
     # Add the unique constraint here to prevent duplicate category-timeframe combinations
