@@ -5,7 +5,9 @@ from django.db import IntegrityError
 from .models import Budget
 from .forms import BudgetForm
 from budget.utils.budget_manager import BudgetManager
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def budget_list(request):
     manager = BudgetManager()
     budget_data = manager.get_budget_summaries(request.user)
