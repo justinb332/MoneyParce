@@ -13,7 +13,7 @@
 
         {% for field in form %}
           <div class="form-group mb-3">
-            <!-- Add an asterisk for required fields -->
+            <!-- Label with an asterisk for required fields -->
             <label for="{{ field.id_for_label }}" class="{% if field.field.required %}required{% endif %}">
               {{ field.label }}
               {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
@@ -31,36 +31,60 @@
         {% endfor %}
 
         <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary me-2">Save Changes</button>
-            <a href="{% url 'delete_income' income.slug %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this income?')">Delete</a>
+          <button type="submit" class="btn" style="background-color: #007bff; color: white;">
+            Add Income
+          </button>
         </div>
       </form>
     </div>
   </div>
-    </div>
-  </div>
+</div>
+
+<!-- JavaScript for Recurring Option -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const isRecurring = document.getElementById('id_is_recurring');
+    const recurrencePeriod = document.getElementById('id_recurrence_period');
+    const dayOfWeekGroup = document.getElementById('id_recurrence_day_of_week')?.closest('.form-group');
+    const dayOfMonthGroup = document.getElementById('id_recurrence_day_of_month')?.closest('.form-group');
+    const periodGroup = document.getElementById('id_recurrence_period')?.closest('.form-group');
+
+    function updateVisibility() {
+      const isRecurringChecked = isRecurring?.checked;
+      const selectedPeriod = recurrencePeriod?.value;
+
+      if (isRecurringChecked) {
+        if (periodGroup) periodGroup.style.display = 'block';
+
+        if (selectedPeriod === 'weekly') {
+          if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'block';
+          if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'none';
+        } else if (selectedPeriod === 'monthly') {
+          if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'none';
+          if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'block';
+        } else {
+          if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'none';
+          if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'none';
+        }
+      } else {
+        if (periodGroup) periodGroup.style.display = 'none';
+        if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'none';
+        if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'none';
+      }
+    }
+
+    isRecurring?.addEventListener('change', updateVisibility);
+    recurrencePeriod?.addEventListener('change', updateVisibility);
+
+    updateVisibility(); // run on page load
+  });
+</script>
 
 
-<!-- Custom Styles -->
+<!-- Optional Styles -->
 <style>
-  /* Highlight required fields */
   .form-group .required {
     font-weight: bold;
-  }
-
-  .form-group input:required {
-    border: 2px solid #dc3545;
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-  }
-
-  .form-group textarea:required {
-    border: 2px solid #dc3545;
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-  }
-
-  .form-group select:required {
-    border: 2px solid #dc3545;
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
   }
 </style>
 {% endblock %}

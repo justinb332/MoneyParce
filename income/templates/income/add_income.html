@@ -45,39 +45,41 @@
   document.addEventListener('DOMContentLoaded', function () {
     const isRecurring = document.getElementById('id_is_recurring');
     const recurrencePeriod = document.getElementById('id_recurrence_period');
-    const dayOfWeek = document.getElementById('id_recurrence_day_of_week')?.closest('p');
-    const dayOfMonth = document.getElementById('id_recurrence_day_of_month')?.closest('p');
-    const periodField = document.getElementById('id_recurrence_period')?.closest('p');
+    const dayOfWeekGroup = document.getElementById('id_recurrence_day_of_week')?.closest('.form-group');
+    const dayOfMonthGroup = document.getElementById('id_recurrence_day_of_month')?.closest('.form-group');
+    const periodGroup = document.getElementById('id_recurrence_period')?.closest('.form-group');
 
     function updateVisibility() {
-      if (isRecurring && isRecurring.checked) {
-        if (periodField) periodField.style.display = 'block';
+      const isRecurringChecked = isRecurring?.checked;
+      const selectedPeriod = recurrencePeriod?.value;
 
-        if (recurrencePeriod) {
-          if (recurrencePeriod.value === 'weekly') {
-            if (dayOfWeek) dayOfWeek.style.display = 'block';
-            if (dayOfMonth) dayOfMonth.style.display = 'none';
-          } else if (recurrencePeriod.value === 'monthly') {
-            if (dayOfWeek) dayOfWeek.style.display = 'none';
-            if (dayOfMonth) dayOfMonth.style.display = 'block';
-          } else {
-            if (dayOfWeek) dayOfWeek.style.display = 'none';
-            if (dayOfMonth) dayOfMonth.style.display = 'none';
-          }
+      if (isRecurringChecked) {
+        if (periodGroup) periodGroup.style.display = 'block';
+
+        if (selectedPeriod === 'weekly') {
+          if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'block';
+          if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'none';
+        } else if (selectedPeriod === 'monthly') {
+          if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'none';
+          if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'block';
+        } else {
+          if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'none';
+          if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'none';
         }
       } else {
-        if (periodField) periodField.style.display = 'none';
-        if (dayOfWeek) dayOfWeek.style.display = 'none';
-        if (dayOfMonth) dayOfMonth.style.display = 'none';
+        if (periodGroup) periodGroup.style.display = 'none';
+        if (dayOfWeekGroup) dayOfWeekGroup.style.display = 'none';
+        if (dayOfMonthGroup) dayOfMonthGroup.style.display = 'none';
       }
     }
 
-    if (isRecurring) isRecurring.addEventListener('change', updateVisibility);
-    if (recurrencePeriod) recurrencePeriod.addEventListener('change', updateVisibility);
+    isRecurring?.addEventListener('change', updateVisibility);
+    recurrencePeriod?.addEventListener('change', updateVisibility);
 
     updateVisibility(); // run on page load
   });
 </script>
+
 
 <!-- Optional Styles -->
 <style>
