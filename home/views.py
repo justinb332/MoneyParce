@@ -92,5 +92,6 @@ def reset_data(request):
     if request.method == 'POST':
         Income.objects.filter(user=request.user).delete()
         Expense.objects.filter(user=request.user).delete()
+        Budget.objects.filter(user=request.user).delete()
         return redirect('settings')
     return redirect('settings')
