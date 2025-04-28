@@ -15,41 +15,40 @@
     <script type="module" src="{% static "js/chart.js" %}"></script> {# Calculates Chart Values #}
 </head>
 <body>
+<div class="wrapper">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'transactions' %}">Transactions</a></li>
+                    <li><a href="{% url 'reports_home' %}">Reports</a></li>
+                    <li><a href="{% url 'budget_list' %}">Budget</a></li>
+                    <li>Logged in as {{ user.username }} (<a href="{% url 'logout' %}">Logout</a>)</li>
+                    <li><a href="{% url 'settings' %}">Settings</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
 
-<header>
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'transactions' %}">Transactions</a></li>
-                <li><a href="{% url 'reports_home' %}">Reports</a></li>
-                <li><a href="{% url 'budget' %}">Budget</a></li>
-                <li>Logged in as {{ user.username }} (<a href="{% url 'logout' %}">Logout</a>)</li>
-                <li><a href="{% url 'settings' %}">Settings</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'register' %}">Register</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-</header>
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this expense?");
+        }
+    </script>
 
-<script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this expense?");
-    }
-</script>
+    <main>
+        {% block content %}
+            <!-- Page stuff can go here -->
+        {% endblock %}
+    </main>
 
-
-<main>
-    {% block content %}
-        <!-- Page stuff can go here -->
-    {% endblock %}
-</main>
-
-<footer>
-    <p>&copy; {% now "Y" %} Emmanuel Team A, 2340.</p>
-</footer>
-
+    <footer>
+        <p>&copy; {% now "Y" %} Emmanuel Team A, 2340.</p>
+    </footer>
+</div>
 </body>
 </html>

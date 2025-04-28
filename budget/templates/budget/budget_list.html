@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Budgets</h1>
+<ul>
+    {% for item in budget_data %}
+        <li>
+            <strong>{{ item.budget.name }}</strong> - ${{ item.budget.amount }}
+            ({{ item.budget.get_timeframe_display }}) - Category: {{ item.budget.category.name }}
+
+            <!-- Links to edit and delete the budget -->
+            <a href="{% url 'edit_budget' item.budget.pk %}">Edit</a> |
+            <a href="{% url 'delete_budget' item.budget.pk %}" class="text-danger">Delete</a>
+
+            <!-- Show total spent and display "Over budget" in red if applicable -->
+            {% if item.budget.timeframe == 'daily' %}
+                <p>
+                    Total Spent Today: ${{ item.total_spent }} |
+                    {% if item.budget.over_budget %}
+                        <span style="color: #ad1c1c;"> Over Budget By ${{ item.budget.over_budget }}</span>
+                    {% else %}
+                        Remaining: ${{ item.budget.remaining_amount }}
+                    {% endif %}
+                </p>
+            {% elif item.budget.timeframe == 'weekly' %}
+                <p>
+                    Total Spent This Week: ${{ item.total_spent }} |
+                    {% if item.budget.over_budget %}
+                        <span style="color: #ad1c1c;"> Over Budget By ${{ item.budget.over_budget }}</span>
+                    {% else %}
+                        Remaining: ${{ item.budget.remaining_amount }}
+                    {% endif %}
+                </p>
+            {% elif item.budget.timeframe == 'monthly' %}
+                <p>
+                    Total Spent This Month: ${{ item.total_spent }} |
+                    {% if item.budget.over_budget %}
+                        <span style="color: #ad1c1c;">| Over Budget By ${{ item.budget.over_budget }}</span>
+                    {% else %}
+                        Remaining: ${{ item.budget.remaining_amount }}
+                    {% endif %}
+                </p>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'add_budget' %}">Add a new budget</a>
+{% endblock %}

@@ -95,7 +95,7 @@ def edit_expense(request, slug):
     else:
         form = ExpenseForm(instance=expense)
 
-    return render(request, 'expense/edit_expense.html', {'form': form})
+    return render(request, 'expense/edit_expense.html', {'form': form, 'expense': expense})
 
 @login_required
 def delete_expense(request, slug):
