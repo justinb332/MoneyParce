@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load budget_extras %}
 
 {% block content %}
     <div class="d-flex flex-column min-vh-100">
@@ -21,7 +22,7 @@
                                 </label>
 
                                 <!-- Render the Form Field -->
-                                {{ field }}
+                                {{ field|add_class:'form-control' }}
 
                                 <!-- Display Field Errors Inline -->
                                 {% if field.errors %}

@@ -1,4 +1,5 @@
 from django import template
+from django.utils.html import escape
 
 register = template.Library()
 
@@ -9,3 +10,10 @@ def dict_get(d, key):
     if isinstance(d, dict):
         return d.get(key)
     return None
+
+@register.filter(name='add_class')
+def add_class(field, css_class):
+    """
+       Appends the specified class to the form field widget's class attribute.
+       """
+    return field.as_widget(attrs={'class': css_class})
