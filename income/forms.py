@@ -16,6 +16,7 @@ class IncomeForm(forms.ModelForm):
         self.fields['name'].required = True
         self.fields['amount'].required = True  # Make this required
         self.fields['category'].required = True # Ensure source is required
+        self.fields['category'].queryset = Category.objects.all()
         self.fields['notes'].required = False
         self.fields['is_recurring'].required = False  # Optional field
         self.fields['recurrence_period'].required = False  # Optional
