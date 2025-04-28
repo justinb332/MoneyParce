@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.utils.crypto import get_random_string
+from django.conf import settings
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -9,6 +10,12 @@ class Category(models.Model):
         return self.name
 
 class Expense(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="expenses",
+    )
+
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
 

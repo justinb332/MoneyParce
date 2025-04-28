@@ -1,12 +1,107 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Home - MoneyParce{% endblock %}
 
 {% block content %}
-<h1>Welcome to MoneyParce{% if user.is_authenticated %}, {{ user.username }}{% endif %}!</h1>
-<p>This is the homepage! </p>
+<div style="padding: 0 60px;">
 
-<div style="display: flex; justify-content: space-between;"> <!-- Flexbox for horizontal alignment -->
+    {# ---------- SHOW ONLY WHEN LOGGED-IN ---------- #}
+    {% if user.is_authenticated %}
+    <div style="padding: 0 60px;">
+    {% if user.is_authenticated %}
+
+    <div style="display: flex; justify-content: space-between; gap: 40px;">
+        {# Bar Chart #}
+        <div style="text-align: center; width: 40%;">
+            <h3>Recent Transactions</h3>
+            {% if has_expenses %}
+                <div id="bar" style="width: 100%; height: 500px;"></div>
+                <button onclick="changeColor('bar')" style="margin-top: 10px;">Change Color</button>
+            {% else %}
+                <p>You haven’t added any expenses yet</p>
+            {% endif %}
+        </div>
+
+        {# Incomes List in the middle #}
+        <div style="text-align: center; width: 20%; align-self: center;">
+            <h3>Incomes</h3>
+            {% if has_income %}
+                <ul style="list-style: none; padding: 0;">
+                    {% for income in incomes_raw %}
+                        <li style="margin-bottom: 10px;">
+                            <strong>${{ income.amount }}</strong><br>
+                            <span style="font-size: 0.9em;">{{ income.category__name }} — {{ income.date }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No income data available.</p>
+            {% endif %}
+        </div>
+
+        {# Pie Chart #}
+        <div style="text-align: center; width: 40%;">
+            <h3>Today's Transactions</h3>
+            {% if latest_transaction_date and latest_transaction_date == today_date %}
+                <div id="pie" style="width: 100%; height: 500px;"></div>
+                <button onclick="changeColor('pie')" style="margin-top: 10px;">Change Color</button>
+            {% elif latest_transaction_date %}
+                <p>No transactions today</p>
+            {% else %}
+                <p>You haven’t added any expenses yet</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+        <h2>Welcome to MoneyParce!</h2>
+        <p>Please <a href="{% url 'login' %}">log in</a> or
+           <a href="{% url 'register' %}">create an account</a> to start tracking
+           your income and expenses.</p>
+    {% endif %}
+</div>
+
+    <script type="module">
+        import { BarChartStrategy } from "{% static 'js/BarChartStrategy.js' %}";
+        import { PieChartStrategy } from "{% static 'js/PieChartStrategy.js' %}";
+        import { chart } from "{% static 'js/chart.js' %}";
+
+        const colors = ['color1', 'color2', 'color3', 'color4'];
+        const currentColorIndex = { bar: 0, pie: 0 };
+
+        function renderCharts() {
+            chart({{ expenses|safe }}, 'Bar Chart', '', new BarChartStrategy(), colors[currentColorIndex.bar]);
+            chart({{ expenses|safe }}, 'Pie Chart', '', new PieChartStrategy(), colors[currentColorIndex.pie]);
+        }
+
+        window.changeColor = function(type) {
+            currentColorIndex[type] = (currentColorIndex[type] + 1) % colors.length;
+            let strategy;
+            if (type === 'bar') {
+                strategy = new BarChartStrategy();
+            } else {
+                strategy = new PieChartStrategy();
+            }
+            if ({{ expenses|safe }}.length) chart({{ expenses|safe }}, 'Bar Chart', '', strategy,
+                colors[currentColorIndex[type]]);
+        };
+        // draw only when data exists
+        if ({{ expenses|safe }}.length) renderCharts();
+    </script>
+
+    {% else %}
+        <h2>Welcome to MoneyParce!</h2>
+        <p>Please <a href="{% url 'login' %}">log in</a> or
+           <a href="{% url 'register' %}">create an account</a> to start tracking
+           your income and expenses.</p><br/>
+        <div style="">
+            <h3 style="text-align: center">Why MoneyParce?</h3>
+            <p>Skip the hassle of spreadsheets using MoneyParce, your one-stop, fast, and convenient solution to everyday finance tracking.</p>
+            <p>You can track expenses, income, and add budgets all in one place.</p>
+            <p>Visual representations of transactions will make interpreting your finances so much easier.</p>
+            <p>We've also included a convenient AI assistant to make sense of any complicated financial problems you may come across.</p>
+        </div>
+    {% endif %}
 
 </div>
 {% endblock %}

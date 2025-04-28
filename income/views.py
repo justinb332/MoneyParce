@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Income
-from .forms import IncomeForm
-
 from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+from .forms import IncomeForm
+from .models import Income
 from datetime import timedelta, datetime
 from calendar import monthrange
 
@@ -35,23 +34,27 @@ def calculate_next_occurrence(current_date, period, day_of_week=None, day_of_mon
 
     return None
 
+@login_required
 def add_income(request):
     if request.method == 'POST':
         form = IncomeForm(request.POST)
         if form.is_valid():
             income = form.save(commit=False)
+            income.user = request.user
 
-            # Manually assign fields to ensure data is saved
-            income.is_recurring = form.cleaned_data['is_recurring']
-            income.recurrence_period = form.cleaned_data['recurrence_period']
-            income.recurrence_day_of_week = form.cleaned_data['recurrence_day_of_week']
+            if not income.date:
+                income.date = now()
+
+            # copy recurring-data fields
+            income.is_recurring            = form.cleaned_data['is_recurring']
+            income.recurrence_period       = form.cleaned_data['recurrence_period']
+            income.recurrence_day_of_week  = form.cleaned_data['recurrence_day_of_week']
             income.recurrence_day_of_month = form.cleaned_data['recurrence_day_of_month']
 
-            # Set next occurrence
+            # compute next_occurrence
             if income.is_recurring and income.recurrence_period:
                 income.next_occurrence = calculate_next_occurrence(
-                    now(),
-                    income.recurrence_period,
+                    now(), income.recurrence_period,
                     income.recurrence_day_of_week,
                     income.recurrence_day_of_month
                 )
@@ -63,41 +66,47 @@ def add_income(request):
 
     return render(request, 'income/add_income.html', {'form': form})
 
+@login_required
 def edit_income(request, slug):
-    income = get_object_or_404(Income, slug=slug)
+    # only let the owner retrieve this income
+    income = get_object_or_404(Income, slug=slug, user=request.user)
 
     if request.method == 'POST':
         form = IncomeForm(request.POST, instance=income)
         if form.is_valid():
-            updated_income = form.save(commit=False)
+            updated = form.save(commit=False)
+            # user stays unchanged (still request.user)
 
-            updated_income.is_recurring = form.cleaned_data['is_recurring']
-            updated_income.recurrence_period = form.cleaned_data['recurrence_period']
-            updated_income.recurrence_day_of_week = form.cleaned_data['recurrence_day_of_week']
-            updated_income.recurrence_day_of_month = form.cleaned_data['recurrence_day_of_month']
+            updated.is_recurring            = form.cleaned_data['is_recurring']
+            updated.recurrence_period       = form.cleaned_data['recurrence_period']
+            updated.recurrence_day_of_week  = form.cleaned_data['recurrence_day_of_week']
+            updated.recurrence_day_of_month = form.cleaned_data['recurrence_day_of_month']
 
-            if updated_income.is_recurring and updated_income.recurrence_period:
-                updated_income.next_occurrence = calculate_next_occurrence(
-                    now(),
-                    updated_income.recurrence_period,
-                    updated_income.recurrence_day_of_week,
-                    updated_income.recurrence_day_of_month
+            if updated.is_recurring and updated.recurrence_period:
+                updated.next_occurrence = calculate_next_occurrence(
+                    now(), updated.recurrence_period,
+                    updated.recurrence_day_of_week,
+                    updated.recurrence_day_of_month
                 )
             else:
-                updated_income.next_occurrence = None
+                updated.next_occurrence = None
 
-            updated_income.save()
+            updated.save()
             return redirect('transactions')
     else:
         form = IncomeForm(instance=income)
 
-    return render(request, 'income/edit_income.html', {'form': form, 'income': income})
+    return render(request, 'income/edit_income.html',
+                  {'form': form, 'income': income})
 
+
+@login_required
 def delete_income(request, slug):
-    income = get_object_or_404(Income, slug=slug)
+    income = get_object_or_404(Income, slug=slug, user=request.user)
     income.delete()
     return redirect('transactions')
 
+@login_required
 def home(request):
-    incomes = Income.objects.all().order_by('-date')
+    incomes = Income.objects.filter(user=request.user).order_by('-date')
     return render(request, 'home/home.html', {'incomes': incomes})

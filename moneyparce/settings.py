@@ -126,8 +126,8 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
-    BASE_DIR / 'moneyparce/static/',
-    os.path.join(BASE_DIR, "static"),
+    BASE_DIR / 'moneyparce/static/', 'home/static/',
+    # os.path.join(BASE_DIR, "static"),
 ]
 
 VENV_PATH = os.path.dirname(BASE_DIR)

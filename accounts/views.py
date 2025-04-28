@@ -1,4 +1,5 @@
 import logging
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -7,14 +8,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
-import uuid
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
+from django.urls import reverse
+from django import forms
 
 from accounts.forms import SignUpForm, CustomPasswordResetForm, EnableTwoFactorAuthForm
 from accounts.models import CustomUser
-from django.urls import reverse
+
+import uuid
 
 def register(request):
     if request.method == 'POST':
@@ -29,10 +32,17 @@ def register(request):
 
 def logout_view(request):
     logout(request)
-    return render(request, 'accounts/logout.html')
+    # return render(request, 'accounts/logout.html')
+    return render(request, 'home/home.html')
 
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
+
+    def __init__(self):
+        super(CustomLoginView, self).__init__()
+
+        # for field in self.fields:
+        #     self.fields[field].widget.attrs.update({'class': 'form-control'})
 
     def form_valid(self, form):
         user = form.get_user()
@@ -156,7 +166,3 @@ def profile_settings(request):
             return redirect('profile_settings')
 
     return render(request, 'home/settings.html')
-
-
-
-
