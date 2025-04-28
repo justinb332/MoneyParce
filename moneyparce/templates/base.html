@@ -23,7 +23,7 @@
             {% if user.is_authenticated %}
                 <li><a href="{% url 'transactions' %}">Transactions</a></li>
                 <li><a href="{% url 'reports_home' %}">Reports</a></li>
-                <li><a href="{% url 'budget' %}">Budget</a></li>
+                <li><a href="{% url 'budget_list' %}">Budget</a></li>
                 <li>Logged in as {{ user.username }} (<a href="{% url 'logout' %}">Logout</a>)</li>
                 <li><a href="{% url 'settings' %}">Settings</a></li>
             {% else %}
