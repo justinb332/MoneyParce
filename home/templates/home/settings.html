@@ -4,8 +4,10 @@
 {% block title %}Settings - MoneyParce{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 <div>
     <h2>Settings</h2>
+    <hr>
     <div>
         <h3>Two-Factor Authentication</h3>
         <form method="post" action="{% url 'profile_settings' %}">

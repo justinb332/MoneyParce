@@ -1,5 +1,5 @@
 from django import forms
-from .models import Income
+from .models import Income, Category
 
 class IncomeForm(forms.ModelForm):
     class Meta:
