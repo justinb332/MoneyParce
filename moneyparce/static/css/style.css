@@ -108,3 +108,19 @@ h3 {
         margin: 0.5rem 0;
     }
 }
+
+.color-change-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.color-change-btn:hover {
+    background-color: #45a049;
+}
