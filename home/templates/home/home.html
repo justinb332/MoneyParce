@@ -48,7 +48,13 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No income data available.</p>
+                <div style="text-align: center;">
+                    <p style="font-size: 16px; color: #666;">No income data available.</p>
+                    <img src="{% static 'images/new-site2.jpeg' %}"
+                         alt="No income available"
+                         style="max-width: 100%; height: auto; margin: 75px 0;">
+                </div>
+
             {% endif %}
         </div>
 
